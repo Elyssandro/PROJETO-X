@@ -89,11 +89,8 @@ def get_logo():
 
 @app.route("/baixar", methods=["POST"])
 def baixar():
-    link = request.form.get("link")
-    formato = request.form.get("formato")
-
-    if not link or not formato:
-        return "<h2>Erro: Link ou formato não enviado.</h2>"
+    link = request.form["link"]
+    formato = request.form["formato"]
 
     pasta = "GELADO"
     os.makedirs(pasta, exist_ok=True)
@@ -102,9 +99,6 @@ def baixar():
         "format": "bestaudio/best" if formato == "mp3" else "best",
         "outtmpl": os.path.join(pasta, "%(title)s.%(ext)s")
     }
-
-    if os.path.exists("cookies.txt"):
-        ydl_opts["cookiefile"] = "cookies.txt"
 
     if formato == "mp3":
         ydl_opts["postprocessors"] = [{
@@ -122,7 +116,7 @@ def baixar():
             filename = os.path.join(pasta, os.path.basename(filename))
             nome_exibido = os.path.basename(filename)
     except Exception as e:
-        return f"<h2>Erro ao baixar: {str(e)}</h2>"
+        return f"<h2>Erro ao baixar: {e}</h2>"
 
     return f"""
     <!DOCTYPE html>

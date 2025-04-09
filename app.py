@@ -14,9 +14,6 @@ def home():
       <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
       <title>Gelado</title>
       <style>
-        * {
-          box-sizing: border-box;
-        }
         body {
           margin: 0;
           padding: 0;
@@ -25,33 +22,31 @@ def home():
           display: flex;
           justify-content: center;
           align-items: center;
-          min-height: 100vh;
+          height: 100vh;
         }
         .container {
-          width: 100%;
-          max-width: 500px;
-          padding: 20px;
           text-align: center;
         }
         .titulo {
-          width: 100%;
-          max-width: 100%;
+          max-width: 90%;
           height: auto;
-          margin-bottom: 30px;
+          margin-bottom: 40px;
         }
-        .input-link, select {
-          width: 100%;
+        .input-link {
+          display: block;
+          width: 80%;
+          max-width: 500px;
+          margin: 10px auto;
           padding: 15px;
-          margin: 10px 0;
           border: none;
           border-radius: 30px;
           background-color: #d4ff1e;
+          color: #000;
           font-size: 16px;
         }
         .btn-baixar {
-          width: 100%;
-          padding: 15px;
-          margin-top: 15px;
+          margin-top: 20px;
+          padding: 15px 30px;
           border: none;
           border-radius: 30px;
           background-color: #000;
@@ -60,20 +55,17 @@ def home():
           cursor: pointer;
         }
         .logo {
-          margin-top: 30px;
-          width: 80px;
-        }
-        @media (max-width: 400px) {
-          .btn-baixar, .input-link, select {
-            font-size: 14px;
-            padding: 12px;
-          }
+          position: absolute;
+          bottom: 10px;
+          left: 10px;
+          width: 100px;
         }
       </style>
     </head>
     <body>
       <div class="container">
         <img src="/BAIXE.png" alt="Baixe Suas Músicas e Vídeos" class="titulo"/>
+
         <form action="/baixar" method="POST">
           <input type="text" name="link" placeholder="COLE O LINK AQUI" class="input-link" required />
           <select name="formato" class="input-link">
@@ -82,6 +74,7 @@ def home():
           </select>
           <button type="submit" class="btn-baixar">BAIXAR</button>
         </form>
+
         <img src="/logo.png" alt="Logo Gelado" class="logo"/>
       </div>
     </body>
@@ -130,21 +123,19 @@ def baixar():
     <head>
       <meta charset="UTF-8" />
       <title>Download Concluído</title>
-      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
       <style>
         body {{
           background: linear-gradient(to right, #d4ff1e, #ff00a2);
           font-family: Arial, sans-serif;
           text-align: center;
-          padding: 30px;
+          padding: 50px;
         }}
         .msg {{
           background: white;
-          padding: 20px;
+          padding: 30px;
           border-radius: 20px;
           display: inline-block;
           box-shadow: 0 0 10px rgba(0,0,0,0.2);
-          max-width: 90%;
         }}
         a {{
           display: inline-block;
@@ -171,8 +162,7 @@ def baixar():
 def baixar_arquivo(nome_arquivo):
     return send_from_directory("GELADO", nome_arquivo, as_attachment=True)
 
-import os
-
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
+    app.run(debug=True, host="0.0.0.0")
+
+    

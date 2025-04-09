@@ -65,7 +65,6 @@ def home():
     <body>
       <div class="container">
         <img src="/BAIXE.png" alt="Baixe Suas Músicas e Vídeos" class="titulo"/>
-
         <form action="/baixar" method="POST">
           <input type="text" name="link" placeholder="COLE O LINK AQUI" class="input-link" required />
           <select name="formato" class="input-link">
@@ -74,7 +73,6 @@ def home():
           </select>
           <button type="submit" class="btn-baixar">BAIXAR</button>
         </form>
-
         <img src="/logo.png" alt="Logo Gelado" class="logo"/>
       </div>
     </body>
@@ -91,17 +89,22 @@ def get_logo():
 
 @app.route("/baixar", methods=["POST"])
 def baixar():
-    link = request.form["link"]
-    formato = request.form["formato"]
+    link = request.form.get("link")
+    formato = request.form.get("formato")
+
+    if not link or not formato:
+        return "<h2>Erro: Link ou formato não enviado.</h2>"
 
     pasta = "GELADO"
     os.makedirs(pasta, exist_ok=True)
 
     ydl_opts = {
         "format": "bestaudio/best" if formato == "mp3" else "best",
-        "outtmpl": os.path.join(pasta, "%(title)s.%(ext)s"),
-        "cookiefile": "cookies.txt",  # Usa cookies para vídeos com restrição
+        "outtmpl": os.path.join(pasta, "%(title)s.%(ext)s")
     }
+
+    if os.path.exists("cookies.txt"):
+        ydl_opts["cookiefile"] = "cookies.txt"
 
     if formato == "mp3":
         ydl_opts["postprocessors"] = [{
@@ -119,7 +122,7 @@ def baixar():
             filename = os.path.join(pasta, os.path.basename(filename))
             nome_exibido = os.path.basename(filename)
     except Exception as e:
-        return f"<h2>Erro ao baixar: {e}</h2>"
+        return f"<h2>Erro ao baixar: {str(e)}</h2>"
 
     return f"""
     <!DOCTYPE html>
